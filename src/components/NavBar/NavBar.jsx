@@ -1,13 +1,15 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { NavLink } from 'react-router-dom'
 import Saved_recipe from '../Saved_Recipe/Saved_recipe'
-import { useDispatch,useSelector } from 'react-redux'
-import { side_bar } from '../features/Recipe_Slice'
+import { useDispatch, useSelector } from 'react-redux'
+import { filter, side_bar,fetch_recipe } from '../features/Recipe_Slice'
+import { Autocomplete, TextField } from '@mui/material'
+import { useLocation,useNavigate } from 'react-router-dom'
 
 const navigation = [
-  { name: 'Dashboard', href: '/', current: true },
+  { name: 'Dashboard', href: '/recipe_catalog', current: true },
   { name: 'Saved Recipe', current: false },
 ]
 
@@ -16,16 +18,44 @@ function classNames(...classes) {
 }
 
 
+
 export default function NavBar() {
+  const localdata = JSON.parse(localStorage.getItem("log_details"))
+
 
   const dispatch = useDispatch();
-  const icon_img=useSelector((state)=>state.sign.img)
+  const data = useSelector((state) => state.recipe.user)
+
+  const navigate=useNavigate()
+
+  function handlechange(e) {
+    dispatch(filter(e.target.innerText))
+  }
+
+  const location=useLocation();
+
+  useEffect(()=>{
+    if(data.length==0 && location.pathname=="/recipe_catalog"){
+      dispatch(fetch_recipe())
+    }
+  })
+  
+  function data_dispatch(){
+    dispatch(fetch_recipe())
+  }
+
   function Saved_recipe() {
     dispatch(side_bar(true));
   }
+  
+
+
+  const options = []
+  data.map((elem) => options.push(elem.title))
+  
 
   return (
-    <Disclosure as="nav" className="bg-gray-800 z-10 ">
+    <Disclosure as="nav" className={`bg-gray-800 z-10 pt-2 w-full fixed`}>
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -41,17 +71,22 @@ export default function NavBar() {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start md:gap-x-6 gap-x-3 ">
-                
-                <input className='order-last rounded-xl pl-2 font-bold h-8 ' placeholder='kal thik kerna hai' />
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-10 h-10 order-last cursor-pointer mt-[-4px]">
-                  <path className='stroke-white stroke-[3px]' strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                </svg>
+              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start md:gap-x-6 gap-x-3
+              ">
 
+                {location.pathname=="/recipe_catalog"? <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={options}
+                  onChange={handlechange}
+                  sx={{ width: 200}}
+                  renderInput={(params) => <TextField {...params} placeholder='search Recipe Here' sx={{backgroundColor:"white",borderRadius:"20px"}} />}
+                />:""}
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     <NavLink to={navigation[0].href}
                       key={navigation[0].name}
+                      onClick={data_dispatch}
                       className={classNames(
                         navigation[0].current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'rounded-md px-3 py-2 text-sm font-medium'
@@ -83,7 +118,7 @@ export default function NavBar() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={icon_img}
+                        src={localdata.img}
                         alt="avatar"
                       />
                     </Menu.Button>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Text_area({value,type,onChange,name}) {
+function Text_area({value,type,ref,onChange,name}) {
     return (
         <>
 

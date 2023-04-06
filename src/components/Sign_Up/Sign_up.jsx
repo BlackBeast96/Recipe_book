@@ -13,7 +13,6 @@ function Sign_up() {
         name:"",
         img:"",
         password:"",
-        desc:"",
         email:"",
 
     })
@@ -40,8 +39,9 @@ function Sign_up() {
 
     function submite_data(e){
         e.preventDefault();
-        navigate("/")
+        localStorage.setItem("log_details",JSON.stringify(data))
         dispatch(sign_up(data))
+        navigate("/recipe_catalog")
     }
     return (
         <>
@@ -55,16 +55,10 @@ function Sign_up() {
                         <div className=" rounded-md shadow-sm space-y-2">
                             <Text_area name="img" onChange={changing_image} type={"file"} value={"image"} />
                             <Text_area name="name" onChange={changed} type={"text"} value={"Enter Your Full Name"} />
-                            <Text_area name="desc" onChange={changed} type={"text"} value={"Enter Your Bio"} />
                             <Text_area name="email" onChange={changed} type={"email"} value={"Enter Email"} />
                             <Text_area name="password" onChange={changed} type={"password"} value={"Password"} />
                         </div>
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
-                                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">Remember me</label>
-                            </div>
-
                             <div className="text-sm">
                                 <NavLink to="/sign_in" className="font-medium text-indigo-600 hover:text-indigo-500">Sign in </NavLink>
                             </div>

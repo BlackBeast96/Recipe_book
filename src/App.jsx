@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Sign_in from './components/Sign_IN/Sign_in'
 import Sign_up from './components/Sign_Up/Sign_up'
 import Recipe_catalog from './components/Recipe_Catalog/Recipe_catalog'
@@ -12,20 +12,21 @@ import { useSelector } from "react-redux";
 
 function App() {
   const visible_saved=useSelector((state)=>state.recipe.open);
+ 
   return (
     <>
     {/* <Request/> */}
     {visible_saved==true?<Saved_recipe />:""}
     <Routes>
-    <Route path='/' element={<Recipe_catalog/>} />
+    <Route path='/recipe_catalog' element={<Recipe_catalog/>} />
     <Route path='/sign_in' element={<Sign_in/>} />
-    <Route path='/sign_up' element={<Sign_up/>} />
+    <Route path='/' element={<Sign_up/>} />
     <Route path='/recipe_details' element={<Recipe_details/>} />
     <Route path='/saved_recipe' element={<Saved_recipe/>} />
     <Route path='/profile' element={<Profile/>} />
 
 
-    {/* <Route path='*' element={<Error_404/>} /> */}
+    <Route path='*' element={<Error_404/>} />
 
     </Routes>
     </>

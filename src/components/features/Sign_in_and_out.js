@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
+
 const initialState={
     name:"",
     email:"",
-    desc:"",
     img:"",
     password:"",
 }
@@ -19,13 +20,11 @@ const Sign_Slice=createSlice({
             state.img=action.payload.img
             state.desc=action.payload.desc
         },
-        sign_in:(state,action)=>{
 
-        }
     }
 })
 
 export default Sign_Slice.reducer
-export const {sign_up,sign_in} =Sign_Slice.actions
+export const {sign_up} =Sign_Slice.actions
 
 
